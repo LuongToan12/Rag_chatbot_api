@@ -92,46 +92,77 @@ Khi khởi chạy Container, người vận hành bắt buộc phải cấu hìn
 
 ---
 
-## 5. TÍCH HỢP & KIỂM TRA HỆ THỐNG (API INTEGRATION & TESTING)
+## 5. HƯỚNG DẪN KIỂM TRA & SỬ DỤNG API (API TESTING GUIDE)
 
-Sau khi khởi chạy thành công, ứng dụng sẽ mất khoảng 15-30 giây đầu tiên để tải mô hình học máy vào bộ nhớ.
+Sau khi khởi chạy thành công, ứng dụng sẽ cần khoảng 15-30 giây đầu tiên để tải các mô hình học máy vào bộ nhớ.
 
-### 5.1. API Kiểm tra trạng thái hệ thống (Health Check)
-Sử dụng curl hoặc Postman để kiểm tra xem hệ thống đã sẵn sàng chưa:
-```bash
-curl http://localhost:8000/health
-```
-**Response (JSON):**
-```json
-{
-  "status": "healthy"
-}
-```
+### 5.1. Thử nghiệm trực quan qua giao diện Swagger UI (Dễ nhất - Khuyên dùng)
+FastAPI cung cấp sẵn một trang tài liệu tương tác giúp bạn dễ dàng gọi thử API mà không cần cài đặt phần mềm nào khác:
+1. Mở trình duyệt Web và truy cập đường dẫn: **`http://localhost:8000/docs`** (hoặc cổng bạn đã thiết lập).
+2. Tại đây, bạn sẽ thấy danh sách các API của hệ thống.
+3. Bấm chọn API **`POST /chat`** (màu xanh lá).
+4. Nhấn nút **Try it out** ở góc phải.
+5. Nhập câu hỏi kiểm tra tại phần request body, ví dụ:
+   ```json
+   {
+     "question": "Dự án này là gì?"
+   }
+   ```
+6. Nhấn nút **Execute** (màu xanh dương) để gửi câu hỏi và nhận câu trả lời trực tiếp bên dưới.
 
-### 5.2. API Chatbot RAG (Hỏi đáp dựa trên tài liệu)
+> [!IMPORTANT]
+> **Lưu ý về lỗi `405 Method Not Allowed`:**  
+> Không truy cập trực tiếp đường dẫn `http://localhost:8000/chat` bằng trình duyệt Web. Trình duyệt sẽ gửi yêu cầu dạng `GET`, trong khi API chỉ chấp nhận dạng `POST` (gửi kèm câu hỏi). Truy cập trực tiếp sẽ dẫn đến lỗi `405`. Hãy sử dụng trang `/docs` để test thử.
+
+---
+
+### 5.2. Tích hợp API trong ứng dụng (Dành cho Lập trình viên)
+
+#### A. Kiểm tra trạng thái hoạt động (Health Check)
+* **Endpoint:** `GET http://localhost:8000/health`
+* **cURL lệnh:**
+  ```bash
+  curl http://localhost:8000/health
+  ```
+* **Phản hồi mẫu:**
+  ```json
+  {
+    "status": "healthy"
+  }
+  ```
+
+#### B. API Hỏi đáp RAG Chatbot
 * **Endpoint:** `POST http://localhost:8000/chat`
 * **Content-Type:** `application/json`
-* **Request Body:**
+* **Yêu cầu (Request Body):**
   ```json
   {
     "question": "Quy định bảo mật thông tin của công ty là gì?"
   }
   ```
-
-**Lệnh cURL chạy thử:**
-```bash
-curl -X POST http://localhost:8000/chat \
-     -H "Content-Type: application/json" \
-     -d '{"question": "Quy định bảo mật thông tin của công ty là gì?"}'
-```
-
-**Response (JSON):**
-```json
-{
-  "question": "Quy định bảo mật thông tin của công ty là gì?",
-  "answer": "[Câu trả lời được sinh ra kèm nguồn trích xuất tài liệu dạng [Source N]]"
-}
-```
+* **Lệnh cURL mẫu:**
+  ```bash
+  curl -X POST http://localhost:8000/chat \
+       -H "Content-Type: application/json" \
+       -d '{"question": "Quy định bảo mật thông tin của công ty là gì?"}'
+  ```
+* **Lệnh PowerShell mẫu:**
+  ```powershell
+  $body = @{ question = "Quy định bảo mật thông tin của công ty là gì?" } | ConvertTo-Json -Compress
+  Invoke-RestMethod -Uri http://localhost:8000/chat -Method Post -Body $body -ContentType "application/json"
+  ```
+* **Phản hồi mẫu (Response):**
+  ```json
+  {
+    "question": "Quy định bảo mật thông tin của công ty là gì?",
+    "answer": "[Nội dung câu trả lời từ tài liệu kèm nguồn [Source 1]...]"
+  }
+  ```
 
 ---
+
+## 6. THÔNG TIN HỖ TRỢ & LIÊN HỆ
+Trong quá trình triển khai, nếu gặp bất kỳ lỗi nào liên quan đến cơ sở dữ liệu ChromaDB hoặc lỗi kết nối API, vui lòng liên hệ:
+* **Tech Lead / Bộ phận Phát triển:** [Tên người phụ trách dự án / Email liên hệ]
+* **DevOps Team:** [Email hỗ trợ kỹ thuật vận hành]
 

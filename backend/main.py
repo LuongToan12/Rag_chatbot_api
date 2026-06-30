@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from backend.services.chatbot import ask
 
@@ -22,9 +23,7 @@ async def chat(req: ChatRequest):
 
 @app.get("/")
 async def root():
-    return {
-        "status": "running"
-    }
+    return RedirectResponse(url="/docs")
 
 @app.get("/health")
 async def health():
