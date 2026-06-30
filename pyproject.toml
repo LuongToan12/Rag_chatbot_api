@@ -1,0 +1,23 @@
+[project]
+name = "rag-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [    
+    "langchain>=0.3.0",
+    "langchain-core>=1.0.0",
+    "langchain-google-genai>=4.2.2",
+    "python-dotenv>=1.2.2",
+    "ipykernel>=7.2.0",
+    "notebook>=7.5.6",
+    "langchain-chroma>=1.1.0",
+    "langchain-huggingface>=1.2.2",
+    "chromadb>=1.5.9",
+    "langchain-community>=0.4.1",
+    "langchain-text-splitters>=1.1.2",
+    "fastapi>=0.138.0",
+    "uvicorn>=0.48.0",
+    "sentence-transformers>=5.1.0" ,
+    "pypdf>=5.0.0"
+    ]

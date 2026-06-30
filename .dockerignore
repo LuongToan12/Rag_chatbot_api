@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+data/
+chroma_db/
+frontend/
+.ipynb_checkpoints/
+.env
+.python-version
+Dockerfile
+.dockerignore
